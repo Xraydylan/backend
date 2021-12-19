@@ -1,7 +1,8 @@
 const Router      = require('koa-router');
-const KoaBody      = require('koa-body');
-
 const controller = require('../../controller/projects');
+
+const inputValidation = require('openapi-validator-middleware');
+module.exports = inputValidation.init("docs/docs.yaml", {framework: 'koa', beautifyErrors: true});
 
 const router = new Router();
 
@@ -17,11 +18,11 @@ router.del('/:id', async (ctx) => {
 	await controller.deleteProjectById(ctx);
 });
 
-router.post('/', KoaBody(), async (ctx) => {
+router.post('/', async (ctx) => {
 	await controller.createProject(ctx);
 });
 
-router.put('/:id', KoaBody(), async (ctx) => {
+router.put('/:id', async (ctx) => {
     await controller.updateProjectById(ctx);
 });
 

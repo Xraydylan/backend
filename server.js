@@ -14,16 +14,17 @@ const dbSchema = require("koa-mongoose-erd-generator");
 const deviceManager = require("./createDevices");
 const niclaDevice = require("./deviceSchemas/nicla").device;
 const bleNanoDeivce = require("./deviceSchemas/bleNano").device;
+const bodyParser = require("koa-bodyparser");
+const inputValidation = require("openapi-validator-middleware");
+inputValidation.init("docs/docs.yaml", { framework: "koa" });
 
 // create server
 const server = new Koa();
+server.use(bodyParser());
 
 // connect to Mongo
 mongoose.connect(config.db, { useNewUrlParser: true });
 
-// suppress deprecation warnings
-mongoose.set("useFindAndModify", false);
-mongoose.set("useCreateIndex", true);
 
 deviceManager
   .clearDevices()
@@ -95,8 +96,14 @@ server.use(async (ctx, next) => {
   try {
     await next();
   } catch (error) {
+    if (error instanceof inputValidation.InputValidationError) {
+      ctx.body = { errors: error.errors };
+      ctx.status = 400;
+      return ctx;
+    }
     ctx.body = { error: error.message };
     ctx.status = error.status || 500;
+    return ctx;
   }
 });
 

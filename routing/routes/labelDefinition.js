@@ -1,7 +1,9 @@
 const Router       = require('koa-router');
-const KoaBody      = require('koa-body');
 
 const controller = require('../../controller/labelDefinition');
+
+const inputValidation = require('openapi-validator-middleware');
+module.exports = inputValidation.init("docs/docs.yaml", {framework: 'koa', beautifyErrors: true});
 
 const router = new Router();
 
@@ -28,7 +30,7 @@ router.get('/:id', async (ctx) => {
  * route:					/labelings
  * method type: 	POST
  */
-router.post('/', KoaBody(), async (ctx) => {
+router.post('/', async (ctx) => {
 	await controller.createLabelDefinition(ctx);
 });
 
@@ -37,7 +39,7 @@ router.post('/', KoaBody(), async (ctx) => {
  * route:					/labelings/:id
  * method type: 	PUT
  */
-router.put('/:id', KoaBody(), async (ctx) => {
+router.put('/:id', async (ctx) => {
 	await controller.updateLabelDefinitionById(ctx);
 });
 
@@ -59,11 +61,11 @@ router.del('/:id', async (ctx) => {
 	await controller.deleteLabelDefinitionById(ctx);
 });
 
-router.post("/:id/createlabeltypes", KoaBody(),  async (ctx) => {
+router.post("/:id/createlabeltypes", async (ctx) => {
 	await controller.addLabelTypes(ctx);
 })
 
-router.post("/:id/deletelabeltypes", KoaBody(), async (ctx) => {
+router.post("/:id/deletelabeltypes", async (ctx) => {
 	await controller.deleteLabelTypes(ctx);
 })
 

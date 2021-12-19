@@ -12,7 +12,7 @@ tags:
   - name: User
     description: 'backend api: user routes'
   - name: Projects
-    description: 'bakcend api: project routes'
+    description: 'backend api: project routes'
   - name: Datasets
     description: 'backend api: dataset routes'
   - name: Devices
@@ -266,8 +266,8 @@ paths:
     delete:
       tags:
       - Projects
-      summary: Delete a dataset by Id
-      operationId: deleteDatasetsById
+      summary: Delete a project by Id
+      operationId: deleteProjectById
       parameters:
       - name: projectId
         in: path
@@ -965,7 +965,7 @@ paths:
       tags:
       - Experiment
       summary: Find a populated experiment in a project by Id
-      operationId: getExperimentById
+      operationId: getExperimentByIdPopulated
       parameters:
       - name: experimentId
         in: path
@@ -2369,22 +2369,10 @@ components:
   responses:
     UnauthorizedError:
       description: Please provide a valid JWT token
-      headers:
-        WWW_Authenticate:
-          schema:
-            type: string
     NotFoundError:
       description: Not Found
-      headers:
-        WWW_Authenticate:
-          schema:
-            type: string
     InternalServerError:
       description: Not Found
-      headers:
-        WWW_Authenticate:
-          schema:
-            type: string
   schemas:
   # Authentication Schemas
     AuthUser:
@@ -2765,6 +2753,7 @@ components:
       properties:
         labels:
           type: array
+          minItems: 1
           items:
               $ref: '#/components/schemas/LabelType'
           description: array of label types
@@ -2773,7 +2762,8 @@ components:
           description: name of labeldefinition
           example: Labeling1
       required:
-      - name
+        - name
+        - labels
       xml:
         name: LabelDefinition
     LabelType:

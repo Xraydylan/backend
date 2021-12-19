@@ -1,5 +1,4 @@
 const config = require("config");
-const request = require("request-promise-native");
 const axios = require("axios").default;
 const Model = require("../models/user").model;
 

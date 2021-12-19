@@ -1,6 +1,4 @@
 const Router      = require('koa-router');
-const KoaBody      = require('koa-body');
-
 const controller = require('../../../controller/datasetLabelDefinition');
 
 const router = new Router();
@@ -28,7 +26,7 @@ router.get('/:id', async (ctx) => {
  * route:					/datasets/{id}/labelings
  * method type: 	POST
  */
-router.post('/', KoaBody(), async (ctx) => {
+router.post('/', async (ctx) => {
 	await controller.createLabeling(ctx);
 });
 
@@ -37,7 +35,7 @@ router.post('/', KoaBody(), async (ctx) => {
  * route:					/datasets/{id}/labelings/:id
  * method type: 	PUT
  */
-router.put('/:id', KoaBody(), async (ctx) => {
+router.put('/:id', async (ctx) => {
 	await controller.updateLabelingById(ctx);
 });
 
